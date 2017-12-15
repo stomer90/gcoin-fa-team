@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.feature.gcoin.common.DeviceProvider;
+import com.feature.gcoin.model.Response;
 import com.feature.gcoin.model.User;
 import com.feature.gcoin.model.UserTokenState;
 import com.feature.gcoin.security.TokenHelper;
@@ -99,11 +100,13 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/change-password", method = RequestMethod.POST)
     @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<?> changePassword(@RequestBody PasswordChanger passwordChanger) {
+    public ResponseEntity<Response> changePassword(@RequestBody PasswordChanger passwordChanger) {
         userDetailsService.changePassword(passwordChanger.oldPassword, passwordChanger.newPassword);
         Map<String, String> result = new HashMap<>();
         result.put( "result", "success" );
-        return ResponseEntity.accepted().body(result);
+        Response response = new Response();
+        response.setResult(result);
+        return ResponseEntity.accepted().body(response);
     }
     
     @RequestMapping(value = "/sign-up", method = RequestMethod.POST)
